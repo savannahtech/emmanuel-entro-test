@@ -1,50 +1,108 @@
-import Image from "next/image";
-import Button from "../Button/Button";
-import { Task } from "@/types/Task.type";
+import { Box, Flex, Image, Link, Text, Button } from "@chakra-ui/react";
 import { formatDateTime } from "@/utils/formatDate";
-import Link from "next/link";
+import NextLink from "next/link";
+import { TaskProps } from "@/types/Task.type";
 
-const TaskCard = ({ task }: { task: Task }) => {
+const TaskCard = ({ task }: { task: TaskProps }) => {
   return (
-    <div className="rounded-[10px] border border-laminar-gray-100 bg-white shadow-card_row flex p-[32px] pr-[44px] justify-between items-center">
+    <Box
+      bg="white"
+      boxShadow="card_row"
+      borderRadius="lg"
+      p={8}
+      pr={11}
+      display="flex"
+      alignItems="center"
+      justifyContent="space-between"
+      border="1px"
+      borderColor="laminar.gray.100"
+    >
       {/* Left */}
-      <div className="flex space-x-6">
+      <Flex gap={6}>
         {/* Logo */}
-        <div className="rounded-[10px] border border-tag-sapphire-blue-400 bg-tag-sapphire-blue-1000 flex w-[64px] h-[64px] justify-center items-center space-x-[24px]">
-          <Image src="/images/pocket.svg" alt="Check" width={40} height={40} />
-        </div>
-        <div className="flex flex-col justify-around cursor-pointer">
-          <h2 className="text-laminar-gray-1000 font-sans text-14  font-semibold leading-18">
+        <Box
+          w={16}
+          h={16}
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          borderRadius="lg"
+          border="1px"
+          borderColor="tag.sapphire.blue.400"
+          bg="tag.sapphire.blue.1000"
+          gap={6}
+        >
+          <Image src="/images/pocket.svg" alt="Check" boxSize={10} />
+        </Box>
+        <Flex direction="column" justify="space-around" cursor="pointer">
+          <Text
+            color="laminar.gray.1000"
+            fontSize="14px"
+            fontWeight="semibold"
+            lineHeight="18px"
+          >
             {task.title}
-          </h2>
-          <div className="space-x-2 flex items-center">
-            <span className="text-laminar-gray-500 font-sans text-xs  font-semibold leading-18">
-              {task.assignee}
-            </span>
-            <span className="text-laminar-gray-500 font-sans text-xs  font-medium leading-18">
+          </Text>
+          <Flex align="center" gap={2}>
+            <Box
+              color="laminar.gray.500"
+              fontSize="xs"
+              fontWeight="semibold"
+              lineHeight="18px"
+            >
+              {task?.taskAssignee?.name || "Unassigned"}
+            </Box>
+            <Text
+              color="laminar.gray.500"
+              fontSize="xs"
+              fontWeight="medium"
+              lineHeight="18px"
+            >
               Creation Date
-            </span>
-            <span className="text-laminar-gray-600 font-sans text-xs  font-normal leading-18">
+            </Text>
+            <Text
+              color="laminar.gray.600"
+              fontSize="xs"
+              fontWeight="normal"
+              lineHeight="18px"
+            >
               {formatDateTime(task.creationDate)}
-            </span>
-          </div>
-        </div>
-      </div>
+            </Text>
+          </Flex>
+        </Flex>
+      </Flex>
       {/* Right */}
-      <Link href={`/taskdetail/${task.id}`}>
-        <div className="flex space-x-4 pl-8 items-center border-l-[1px] border-l-laminar-gray-200 cursor-pointer">
-          <Button>{task.status}</Button>
-          <div>
-            <Image
-              src="/images/chevron-right.svg"
-              alt="Check"
-              width={24}
-              height={24}
-            />
-          </div>
-        </div>
+      <Link
+        href={`/details/${task.id}`}
+        as={NextLink}
+        _hover={{ textDecoration: "none" }}
+      >
+        <Flex
+          align="center"
+          pl={8}
+          borderLeft="1px"
+          borderColor="laminar.gray.200"
+          cursor="pointer"
+          gap={4}
+        >
+          <Button
+            color="laminar.gray.700"
+            fontSize="12px"
+            lineHeight="20"
+            fontWeight={500}
+            borderWidth="1px"
+            borderColor="laminar.gray.200"
+            borderRadius="6px"
+            background="transparent"
+          >
+            {task.status}
+          </Button>
+          <Box boxSize={6}>
+            <Image src="/images/chevron-right.svg" alt="Chevron" />
+          </Box>
+        </Flex>
       </Link>
-    </div>
+    </Box>
   );
 };
 

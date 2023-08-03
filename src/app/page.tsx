@@ -1,19 +1,27 @@
-import Button from "@/components/Button/Button";
+import Home from "@/components/Home";
 import TaskList from "@/components/TaskList";
-import Image from "next/image";
+import { prisma } from "@/db";
+import { Link } from "@chakra-ui/next-js";
+import { Box, Button, Flex, Heading } from "@chakra-ui/react";
 
-export default function Home() {
-  return (
-    <main className="p-[104px]">
-      <div className="flex space-x-5 items-center">
-        <h1 className="text-laminar-gray-700 font-sans text-[22px] font-semibold leading-18">
-          Tasks
-        </h1>
-        <div className="w-fit">
-          <Button>New Task</Button>
-        </div>
-      </div>
-      <TaskList />
-    </main>
-  );
+export default function Page() {
+  async function fetchTasks(page = 1) {
+    "use server";
+    const itemsPerPage = 20;
+    const totalTasks = await prisma.task.count();
+    const totalPages = Math.ceil(totalTasks / itemsPerPage);
+
+    const tasks = await prisma.task.findMany({
+      orderBy: {
+        creationDate: "desc",
+      },
+      take: itemsPerPage * page,
+      include: {
+        taskAssignee: true,
+      },
+    });
+
+    return { data: tasks, page, totalPages, counts: totalTasks };
+  }
+  return <Home fetchTasks={fetchTasks} />;
 }

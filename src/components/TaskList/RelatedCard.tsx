@@ -1,30 +1,36 @@
 "use client";
-import React, { useState, useEffect } from "react";
-import InfiniteScroll from "react-infinite-scroll-component";
-import TaskCard from "../TaskCard";
 import { TaskProps, TasksMetaProps } from "@/types/Task.type";
+import TaskCard from "../TaskCard";
+import { useEffect, useState } from "react";
+import InfiniteScroll from "react-infinite-scroll-component";
 import { Box } from "@chakra-ui/react";
 
-const TaskList = ({
-  fetchTasks,
+const RelatedCard = ({
+  fetchRelatedTask,
+  userId,
 }: {
-  fetchTasks: (page?: number) => Promise<TasksMetaProps>;
+  fetchRelatedTask: (
+    page: number,
+    userId: number | null
+  ) => Promise<TasksMetaProps>;
+  userId: number | null;
 }) => {
-  // Initial state
   const [items, setItems] = useState<TaskProps[]>([]);
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   useEffect(() => {
     (async function () {
-      console.timeStamp("fetching initial data ... ");
-      const { data, page: p, totalPages } = await fetchTasks(page);
+      const {
+        data,
+        page: p,
+        totalPages,
+      } = await fetchRelatedTask(page, userId);
       setItems(data);
       setPage(p);
       setTotalPage(totalPages);
-      console.timeStamp("fetching initial data ... ");
     })();
-  }, [fetchTasks, page]);
+  }, [fetchRelatedTask, page, userId]);
 
   // Simulate async loading of data
   const fetchMoreData = () => {
@@ -36,7 +42,12 @@ const TaskList = ({
     // a fake async api call
     setTimeout(async () => {
       // setItems(Tasks.slice(0, items.length + 20));
-      const { data, counts, page: p, totalPages } = await fetchTasks(page + 1);
+      const {
+        data,
+
+        page: p,
+        totalPages,
+      } = await fetchRelatedTask(page + 1, userId);
       setItems(data);
       setPage(p);
       setTotalPage(totalPages);
@@ -44,7 +55,7 @@ const TaskList = ({
   };
 
   return (
-    <Box mt={5} w="100%">
+    <Box w="100%" mt="20px">
       <InfiniteScroll
         dataLength={items.length}
         next={fetchMoreData}
@@ -66,4 +77,4 @@ const TaskList = ({
   );
 };
 
-export default TaskList;
+export default RelatedCard;

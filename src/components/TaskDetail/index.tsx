@@ -1,76 +1,143 @@
-import { Task } from "@/types/Task.type";
-import Image from "next/image";
+"use client";
+import {
+  Box,
+  Flex,
+  Text,
+  VStack,
+  HStack,
+  Divider,
+  Image,
+} from "@chakra-ui/react";
+import { TaskProps, TasksMetaProps } from "@/types/Task.type";
+import { formatDateTime } from "@/utils/formatDate";
+import { useState } from "react";
+import RelatedCard from "../TaskList/RelatedCard";
+import StatusInfo from "./StatusInfo";
+import TabSelector from "./TabSelector";
 
-const TaskDetail = ({ task }: { task: Task }) => {
+const TaskDetail = ({
+  task,
+  fetchRelatedTask,
+}: {
+  task: TaskProps;
+  fetchRelatedTask: (
+    page: number,
+    userId: number | null
+  ) => Promise<TasksMetaProps>;
+}) => {
+  const [selectedTab, setSelectedTab] = useState(0);
+  const tabs = [
+    {
+      name: "Related Tasks",
+      id: 0,
+    },
+    {
+      name: "Watchers",
+      id: 1,
+    },
+  ];
+
   return (
-    <div className="flex p-6 pb-16 flex-col items-start space-y-6 self-stretch rounded-md bg-laminar-gray-50 w-full min-h-screen">
-      <div className="flex items-center gap-6 self-stretch">
-        <div className="rounded-[10px] border border-tag-sapphire-blue-400 bg-tag-sapphire-blue-1000 flex w-[64px] h-[64px] justify-center items-center space-x-[24px]">
-          <Image
-            src="/images/plus-circle.svg"
-            alt="Check"
-            width={40}
-            height={40}
-          />
-        </div>
-        <div className="flex pt-0.75 flex-col items-start space-y-1 flex-grow-0 flex-shrink-0 flex-basis-0">
-          <h2 className="text-laminar-gray-1000 font-sans text-14  font-semibold leading-18">
-            {task.title}
-          </h2>
-          <p className="text-laminar-gray-600 font-sans text-xs  font-normal leading-18">
-            {task.creationDate}
-          </p>
-        </div>
-      </div>
-      {/* Divider */}
-      <div className="w-full">
-        <div className="border-b border-laminar-gray-500 opacity-40 w-full "></div>
-      </div>
+    <Flex p="100px" pr="170px" alignItems="center" justifyContent="center">
+      <VStack
+        p={6}
+        pb={16}
+        alignItems="start"
+        spacing={6}
+        borderRadius="md"
+        bg="laminar.gray.50"
+        w="full"
+        minH="screen"
+      >
+        <HStack spacing={6} w="full">
+          <Flex
+            borderRadius="10px"
+            border="tag.sapphire.blue.400"
+            backgroundColor="tag.sapphire.blue.1000"
+            display="flex"
+            width="64px"
+            height="64px"
+            justifyContent="center"
+            alignItems="center"
+            gap="24px"
+          >
+            <Image src="/images/plus-circle.svg" alt="Check" />
+          </Flex>
+          <VStack pt="3px" alignItems="start" spacing={1} flexShrink={0}>
+            <Text
+              color="laminar.gray.1000"
+              fontSize="14px"
+              fontWeight="semibold"
+              lineHeight="18px"
+            >
+              {task.title}
+            </Text>
+            <Text
+              color="laminar.gray.600"
+              fontSize="xs"
+              fontWeight="normal"
+              lineHeight="18px"
+            >
+              {formatDateTime(task.creationDate)}
+            </Text>
+          </VStack>
+        </HStack>
+        <Divider borderColor="laminar.gray.500" opacity={0.4} w="full" />
 
-      <div className="flex gap-x-12 items-center">
-        <div className="space-y-[6px]">
-          <h3 className="text-laminar-gray-500 font-sans text-xs font-medium leading-18">
-            Status
-          </h3>
-          <div className="flex p-1 px-3 justify-center items-center rounded-full bg-[#EEF2F8]">
-            <span className="text-laminar-gray-700 font-sans text-[13px] font-medium leading-20">
-              {task.status}
-            </span>
-          </div>
-        </div>
-        <div className="space-y-[6px]">
-          <h3 className="text-laminar-gray-500 font-sans text-xs font-medium leading-18">
-            Date Created
-          </h3>
-          <div className="flex p-1 px-3 justify-center items-center rounded-full bg-[#EEF2F8]">
-            <span className="text-laminar-gray-700 font-sans text-[13px] font-medium leading-20">
-              {task.creationDate}
-            </span>
-          </div>
-        </div>
-        <div className="space-y-[6px]">
-          <h3 className="text-laminar-gray-500 font-sans text-xs font-medium leading-18">
-            Assignee
-          </h3>
-          <div className="flex p-1 px-3 justify-center items-center rounded-full bg-[#EEF2F8]">
-            <span className="text-laminar-gray-700 font-sans text-[13px] font-medium leading-20">
-              {task.assignee}
-            </span>
-          </div>
-        </div>
-      </div>
-      {/* Description */}
-      <div className="flex flex-col space-y-4">
-        <h3 className="text-laminar-gray-500 font-sans text-xs font-medium leading-18">
-          Description
-        </h3>
-        <div className="flex p-4 items-start flex-grow-0 flex-shrink-0 rounded-[10px] bg-[#EEF2F8]">
-          <p className="text-laminar-gray-700 font-sans text-[13px] font-medium leading-20 w-3/5">
-            {task.description}
-          </p>
-        </div>
-      </div>
-    </div>
+        <HStack spacing={12}>
+          <StatusInfo title="Status" value={task.status} />
+          <StatusInfo
+            title="Date Created"
+            value={formatDateTime(task.creationDate)}
+          />
+          <StatusInfo
+            title="Assignee"
+            value={task.taskAssignee && task.taskAssignee.name}
+          />
+        </HStack>
+
+        <VStack spacing={4} alignItems={"start"}>
+          <Text
+            color="laminar.gray.500"
+            fontSize="xs"
+            fontWeight="medium"
+            lineHeight="18px"
+          >
+            Description
+          </Text>
+          <Box p={4} borderRadius="lg" bg="#EEF2F8" minH="150px">
+            <Text
+              color="laminar.gray.700"
+              fontSize="13px"
+              fontWeight="medium"
+              lineHeight="20px"
+              w="70%"
+            >
+              {task.description}
+            </Text>
+          </Box>
+        </VStack>
+
+        <HStack spacing={10}>
+          {tabs.map((tab) => (
+            <TabSelector
+              key={tab.id}
+              tab={tab}
+              selectedTab={selectedTab}
+              setSelectedTab={setSelectedTab}
+            />
+          ))}
+        </HStack>
+        {tabs[selectedTab].id === 0 ? (
+          <RelatedCard
+            fetchRelatedTask={fetchRelatedTask}
+            userId={task.taskAssigneeId || null}
+          />
+        ) : (
+          <Box>No Watcher</Box>
+        )}
+      </VStack>
+    </Flex>
   );
 };
 
