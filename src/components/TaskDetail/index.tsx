@@ -38,7 +38,12 @@ const TaskDetail = ({
   ];
 
   return (
-    <Flex p="100px" pr="170px" alignItems="center" justifyContent="center">
+    <Flex
+      p={["20px", "100px"]}
+      pr={["0", "170px"]}
+      alignItems="center"
+      justifyContent="center"
+    >
       <VStack
         p={6}
         pb={16}
@@ -84,7 +89,7 @@ const TaskDetail = ({
         </HStack>
         <Divider borderColor="laminar.gray.500" opacity={0.4} w="full" />
 
-        <HStack spacing={12}>
+        <HStack direction={["column", "row"]} spacing={12}>
           <StatusInfo title="Status" value={task.status} />
           <StatusInfo
             title="Date Created"

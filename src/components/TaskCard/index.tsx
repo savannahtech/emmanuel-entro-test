@@ -20,6 +20,8 @@ const TaskCard = ({
       pr={11}
       display="flex"
       alignItems="center"
+      flexDirection={["column", "row"]}
+      gap={3}
       justifyContent="space-between"
       border={isSelected ? "2px" : "1px"}
       borderColor={isSelected ? "tag.sapphire.blue.400" : "laminar.gray.100"}
@@ -87,7 +89,7 @@ const TaskCard = ({
       <Flex
         align="center"
         pl={8}
-        borderLeft="1px"
+        borderLeft={[0, "1px"]}
         borderColor="laminar.gray.200"
         cursor="pointer"
         gap={4}

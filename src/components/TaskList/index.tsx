@@ -17,12 +17,10 @@ const TaskList = ({
   const [hasMore, setHasMore] = useState(true);
   useEffect(() => {
     (async function () {
-      console.timeStamp("fetching initial data ... ");
       const { data, page: p, totalPages } = await fetchTasks(page);
       setItems(data);
       setPage(p);
       setTotalPage(totalPages);
-      console.timeStamp("fetching initial data ... ");
     })();
   }, [fetchTasks, page]);
 

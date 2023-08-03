@@ -11,7 +11,7 @@ const Home = ({
   fetchTasks: (page?: number) => Promise<TasksMetaProps>;
 }) => {
   return (
-    <Box p="104px">
+    <Box p={["20px", "104px"]}>
       <Flex gap="20px" alignItems="center">
         <Heading
           color="laminar.gray.700"
