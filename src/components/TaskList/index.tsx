@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import TaskCard from "../TaskCard";
 import { TaskProps, TasksMetaProps } from "@/types/Task.type";
-import { Box } from "@chakra-ui/react";
+import { Box, Skeleton } from "@chakra-ui/react";
 
 const TaskList = ({
   fetchTasks,
@@ -49,7 +49,19 @@ const TaskList = ({
         dataLength={items.length}
         next={fetchMoreData}
         hasMore={hasMore}
-        loader={<h4>Loading...</h4>}
+        loader={
+          <Box className="space-y-6">
+            {[1, 2, 3, 4, 5].map((i) => (
+              <Skeleton
+                key={0}
+                height="100px"
+                borderRadius="10px"
+                boxShadow="lg"
+                w="100%"
+              ></Skeleton>
+            ))}
+          </Box>
+        }
         // endMessage={
         //   <p style={{ textAlign: "center" }}>
         //     <b>End of tasks</b>

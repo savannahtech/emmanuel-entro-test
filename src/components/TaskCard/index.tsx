@@ -2,8 +2,15 @@ import { Box, Flex, Image, Link, Text, Button } from "@chakra-ui/react";
 import { formatDateTime } from "@/utils/formatDate";
 import NextLink from "next/link";
 import { TaskProps } from "@/types/Task.type";
-
-const TaskCard = ({ task }: { task: TaskProps }) => {
+import { useRouter } from "next/navigation";
+const TaskCard = ({
+  task,
+  isSelected,
+}: {
+  task: TaskProps;
+  isSelected?: boolean;
+}) => {
+  const router = useRouter();
   return (
     <Box
       bg="white"
@@ -14,8 +21,12 @@ const TaskCard = ({ task }: { task: TaskProps }) => {
       display="flex"
       alignItems="center"
       justifyContent="space-between"
-      border="1px"
-      borderColor="laminar.gray.100"
+      border={isSelected ? "2px" : "1px"}
+      borderColor={isSelected ? "tag.sapphire.blue.400" : "laminar.gray.100"}
+      onClick={() =>
+        isSelected === undefined && router.push(`/details/${task.id}`)
+      }
+      cursor="pointer"
     >
       {/* Left */}
       <Flex gap={6}>
@@ -72,36 +83,31 @@ const TaskCard = ({ task }: { task: TaskProps }) => {
         </Flex>
       </Flex>
       {/* Right */}
-      <Link
-        href={`/details/${task.id}`}
-        as={NextLink}
-        _hover={{ textDecoration: "none" }}
+
+      <Flex
+        align="center"
+        pl={8}
+        borderLeft="1px"
+        borderColor="laminar.gray.200"
+        cursor="pointer"
+        gap={4}
       >
-        <Flex
-          align="center"
-          pl={8}
-          borderLeft="1px"
+        <Button
+          color="laminar.gray.700"
+          fontSize="12px"
+          lineHeight="20"
+          fontWeight={500}
+          borderWidth="1px"
           borderColor="laminar.gray.200"
-          cursor="pointer"
-          gap={4}
+          borderRadius="6px"
+          background="transparent"
         >
-          <Button
-            color="laminar.gray.700"
-            fontSize="12px"
-            lineHeight="20"
-            fontWeight={500}
-            borderWidth="1px"
-            borderColor="laminar.gray.200"
-            borderRadius="6px"
-            background="transparent"
-          >
-            {task.status}
-          </Button>
-          <Box boxSize={6}>
-            <Image src="/images/chevron-right.svg" alt="Chevron" />
-          </Box>
-        </Flex>
-      </Link>
+          {task.status}
+        </Button>
+        <Box boxSize={6}>
+          <Image src="/images/chevron-right.svg" alt="Chevron" />
+        </Box>
+      </Flex>
     </Box>
   );
 };

@@ -20,6 +20,7 @@ import { useEffect, useState } from "react";
 import TabSelector from "../TaskDetail/TabSelector";
 import ModalComponent from "../Modal/Modal";
 import RelatedCard from "../TaskList/RelatedCard";
+import TaskCard from "../TaskCard";
 
 function TaskCreation({
   task,
@@ -53,6 +54,17 @@ function TaskCreation({
     id: 0,
   };
   const [showTaskModal, setShowTaskModal] = useState(false);
+  const [selectedRelatedCards, setSelectedRelatedCards] = useState<TaskProps[]>(
+    []
+  );
+  const handleSelectedTask = (task: TaskProps) => {
+    const existingTask = !!selectedRelatedCards.find((t) => t.id == task.id);
+    if (existingTask)
+      return setSelectedRelatedCards(
+        selectedRelatedCards.filter((t) => t.id != task.id)
+      );
+    setSelectedRelatedCards([...selectedRelatedCards, task]);
+  };
   return (
     <Box padding="104px">
       <Box
@@ -187,12 +199,18 @@ function TaskCreation({
               </Box>
 
               <Box>
-                <HStack spacing={10}>
+                <HStack spacing={10} mb="20px">
                   <TabSelector tab={tab} selectedTab={0} />
                 </HStack>
+
+                <Box className="space-y-6">
+                  {selectedRelatedCards.map((task) => (
+                    <TaskCard key={task.id} task={task} />
+                  ))}
+                </Box>
                 <Flex
-                  mt="20px"
                   alignItems={"center"}
+                  mt="20px"
                   cursor="pointer"
                   onClick={() => setShowTaskModal(true)}
                 >
@@ -207,6 +225,7 @@ function TaskCreation({
                     Link to other tasks
                   </Text>
                 </Flex>
+
                 {showTaskModal && (
                   <ModalComponent
                     isOpen={showTaskModal}
@@ -216,6 +235,9 @@ function TaskCreation({
                     <RelatedCard
                       fetchRelatedTask={fetchRelatedTask}
                       userId={selectedUser?.id || null}
+                      isSelectTask
+                      handleSelectTask={handleSelectedTask}
+                      selectedRelatedCards={selectedRelatedCards}
                     />
                   </ModalComponent>
                 )}

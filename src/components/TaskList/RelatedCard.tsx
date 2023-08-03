@@ -8,12 +8,18 @@ import { Box } from "@chakra-ui/react";
 const RelatedCard = ({
   fetchRelatedTask,
   userId,
+  isSelectTask,
+  selectedRelatedCards,
+  handleSelectTask,
 }: {
   fetchRelatedTask: (
     page: number,
     userId: number | null
   ) => Promise<TasksMetaProps>;
   userId: number | null;
+  handleSelectTask?: (task: TaskProps) => void;
+  selectedRelatedCards?: TaskProps[];
+  isSelectTask?: boolean;
 }) => {
   const [items, setItems] = useState<TaskProps[]>([]);
   const [page, setPage] = useState(1);
@@ -70,7 +76,20 @@ const RelatedCard = ({
         style={{ width: "100%" }}
       >
         {items.map((task) => (
-          <TaskCard key={task.id} task={task} />
+          <div
+            key={task.id}
+            onClick={() =>
+              isSelectTask && handleSelectTask && handleSelectTask(task)
+            }
+          >
+            <TaskCard
+              task={task}
+              isSelected={
+                isSelectTask &&
+                !!selectedRelatedCards?.find((t) => t.id == task.id)
+              }
+            />
+          </div>
         ))}
       </InfiniteScroll>
     </Box>
