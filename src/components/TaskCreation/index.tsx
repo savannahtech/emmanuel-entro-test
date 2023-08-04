@@ -10,45 +10,38 @@ import {
   Editable,
   EditableTextarea,
   HStack,
+  useToast,
 } from "@chakra-ui/react";
 import { Image } from "@chakra-ui/image";
 import { formatDateTime } from "@/utils/formatDate";
 import { TaskProps, TasksMetaProps } from "@/types/Task.type";
 import MenuComponent from "../Menu/Menu";
-import { User } from "@prisma/client";
+import { Task, User } from "@prisma/client";
 import { useEffect, useState } from "react";
 import TabSelector from "../TaskDetail/TabSelector";
 import ModalComponent from "../Modal/Modal";
 import RelatedCard from "../TaskList/RelatedCard";
 import TaskCard from "../TaskCard";
+import { useRouter } from "next/navigation";
 
 function TaskCreation({
-  task,
   users,
   fetchRelatedTask,
+  createTask,
 }: {
-  task: TaskProps;
   users: User[];
   fetchRelatedTask: (
     page: number,
     userId: number | null
   ) => Promise<TasksMetaProps>;
+  createTask(task: Task): Promise<void>;
 }) {
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
-  const [taskTitle, setTaskTitle] = useState(task.title);
-  const [taskCreationDate, setTaskCreationDate] = useState(
-    formatDateTime(new Date())
-  );
-  const [taskDescription, setTaskDescription] = useState(task.description);
-  const [canSubmit, setCanSubmit] = useState(false);
+  const [taskTitle, setTaskTitle] = useState("New Task");
+  const [taskCreationDate, setTaskCreationDate] = useState(new Date());
+  const [taskDescription, setTaskDescription] = useState("");
+
   const [showMore, setShowMore] = useState(false);
-  useEffect(() => {
-    if (taskTitle && taskCreationDate) {
-      setCanSubmit(true);
-    } else {
-      setCanSubmit(false);
-    }
-  }, [taskTitle, taskCreationDate]);
   const tab = {
     name: "Related Tasks",
     id: 0,
@@ -57,6 +50,23 @@ function TaskCreation({
   const [selectedRelatedCards, setSelectedRelatedCards] = useState<TaskProps[]>(
     []
   );
+  const toast = useToast();
+  const router = useRouter();
+  const handleSubmission = async () => {
+    try {
+      const data = {
+        title: taskTitle,
+        creationDate: taskCreationDate,
+        description: taskDescription,
+        taskAssigneeId: selectedUser?.id || null,
+        status: "Open",
+      } as Task;
+      await createTask(data);
+      router.push("/");
+    } catch (e) {
+      throw e;
+    }
+  };
   const handleSelectedTask = (task: TaskProps) => {
     const existingTask = !!selectedRelatedCards.find((t) => t.id == task.id);
     if (existingTask)
@@ -125,8 +135,8 @@ function TaskCreation({
                   />
                 </Editable>
                 <Editable
-                  value={taskCreationDate}
-                  onChange={(e) => setTaskCreationDate(formatDateTime(e))}
+                  value={formatDateTime(taskCreationDate)}
+                  onChange={(e) => setTaskCreationDate(new Date(e))}
                 >
                   <EditablePreview />
                   <EditableInput
@@ -276,12 +286,6 @@ function TaskCreation({
               lineHeight="20px"
               color="white"
               size="sm"
-              disabled={!canSubmit}
-              _disabled={{
-                bg: showMore ? "tag.sapphire.gray.200" : "none",
-                cursor: "not-allowed",
-                opacity: "40",
-              }}
               textColor={showMore ? "white" : "laminar.gray.700"}
               _hover={{ bg: showMore ? "tag.sapphire.blue.1000" : "none" }}
               bg={showMore ? "tag.sapphire.blue.1000" : "none"}

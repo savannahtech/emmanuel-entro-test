@@ -6,15 +6,16 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
 model Task {
-  id             Int    @id @default(autoincrement())
+  id             Int      @id @default(autoincrement())
   title          String
   creationDate   DateTime
-  status         String
-  avatar         String
+  status         String   @default("Open")
+  avatar         String?
   description    String
   taskAssigneeId Int?
-  taskAssignee   User?  @relation(fields: [taskAssigneeId], references: [id])
+  taskAssignee   User?    @relation(fields: [taskAssigneeId], references: [id])
 }
 
 model User {

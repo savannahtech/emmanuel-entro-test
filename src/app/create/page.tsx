@@ -1,25 +1,35 @@
 import TaskCreation from "@/components/TaskCreation";
 import { prisma } from "@/db";
-import { TaskProps } from "@/types/Task.type";
+
 import { fetchRelatedTask } from "../details/[slug]/page";
+import { Task } from "@prisma/client";
 
 const Page = async () => {
-  const task = {
-    title: "New Task",
-    creationDate: "2021-10-01T00:00:00.000Z",
-  } as unknown as TaskProps;
   async function getUsers() {
     "use server";
     const users = prisma.user.findMany({ take: 5 });
     return users;
   }
+  async function createTask(task: Task) {
+    "use server";
+    await prisma.task.create({
+      data: {
+        title: task.title,
+        creationDate: task.creationDate,
+        taskAssigneeId: task.taskAssigneeId,
+        description: task.description,
+        status: task.status,
+        avatar: task.avatar,
+      },
+    });
+  }
 
   const users = await getUsers();
   return (
     <TaskCreation
-      task={task}
       users={users}
       fetchRelatedTask={fetchRelatedTask}
+      createTask={createTask}
     />
   );
 };

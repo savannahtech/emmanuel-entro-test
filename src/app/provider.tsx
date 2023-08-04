@@ -8,7 +8,12 @@ import theme from "./chakra/theme";
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <CacheProvider>
-      <ChakraProvider theme={theme}>{children}</ChakraProvider>
+      <ChakraProvider
+        theme={theme}
+        toastOptions={{ defaultOptions: { position: "top-right" } }}
+      >
+        {children}
+      </ChakraProvider>
     </CacheProvider>
   );
 }
