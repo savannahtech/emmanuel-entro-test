@@ -1,48 +1,49 @@
-This is a [Next.js](https://nextjs.org/)
+# Tasks Management Application Documentation
 
-## Getting Started
+## Technology Used
 
-1. Copy the `env` from `.env.example` to `.env`.
-2. run the prisma to generate:
+- **Frontend**: Next.js, Chakra UI
+- **Backend**: Next.js Prisma
+- **Database**: PostgreSQL
+- **State Management**: React Hooks
 
-```bash
-yarn prisma generate
-# or
-npx prisma generate
-```
+## Running the Application Locally
 
-3. run the development server:
+1. Clone the repository: `git clone <repository-url>`
+2. Install dependencies: `npm install`
+3. Set Up environmental variable: copy `.env.example` to a new file `.env`
+4. Generate prisma: `npx prisma generate`
+5. Start local server: `npm run dev`
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
+## Deployment
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+1. Generate prisma: `npx prisma generate`
+2. Build the application: `npm run build`
+3. Start the application: `npm start`
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Core Features
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+- **Tasks List**: Displays tasks cards ordered by creation date with the ability to view more task details and create a new task.
 
-## What was covered?
+- **Task Form**: Two-step form capturing important information such as title, assignee name, description, and related tasks.
 
-### Task Creation:
+- **Task Detail View**: Provides detailed information on each task, including title, assignee name, status, creation date, description, and related tasks.
 
-Users create new tasks by entering details like title, description, due date, etc. This data is stored and displayed in a task list.
+- **Related Tasks**: Allows linking of multiple tasks and shows a list of related tasks.
 
-### Task List:
+- **Infinite Scrolling UX**: Supports infinite scroll.
 
-Displays all created tasks, with key details visible. It offers sorting and filtering options for easier task management.
+## Enhancements for Production Readiness
 
-### Single Task Detail:
+- **Testing**: Add unit, integration, and end-to-end tests.
+- **Error Handling**: Implement robust error handling.
+- **Performance Optimizations**: Apply techniques like lazy loading, code splitting.
+- **Accessibility**: Improve accessibility for all users.
+- **Internationalization (i18n)**: Support multiple languages.
+- **Security Measures**: Implement security protections like rate limiting, input sanitizing.
+- **CI/CD**: Set up a CI/CD pipeline for automated testing and deployment.
+- **State Management Library**: Consider a state management library for complex state.
+- **SEO Optimization**: Implement SEO best practices.
+- **Analytics**: Integrate with analytics tools like Google Analytics.
 
-A detailed view of a task, showing all task information, status, comments, and related files. Here, users can edit or delete the task.
-
-### Related Tasks:
-
-Tasks can be linked together to show their relation, like being part of a bigger project or acting as prerequisites for other tasks.
-
-### Assign Task: In collaborative settings, tasks can be assigned to specific users. These users become responsible for the task completion and see assigned tasks in their task list
+These enhancements would make the application production-ready.
