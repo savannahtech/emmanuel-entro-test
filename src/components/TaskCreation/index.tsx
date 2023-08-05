@@ -290,6 +290,7 @@ function TaskCreation({
               _hover={{ bg: showMore ? "tag.sapphire.blue.1000" : "none" }}
               bg={showMore ? "tag.sapphire.blue.1000" : "none"}
               variant={showMore ? "solid" : "outline"}
+              onClick={handleSubmission}
             >
               Finish
             </Button>
